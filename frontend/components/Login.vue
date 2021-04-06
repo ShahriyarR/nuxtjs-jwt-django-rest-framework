@@ -48,9 +48,18 @@ export default {
       }
    },
    methods: {
-      loginHandler() {
-         const login = { 'email': this.email, 'password': this.password }
-         console.log(login);
+     async loginHandler() {
+         const data = { 'email': this.email, 'password': this.password }
+         console.log(data);
+         try{
+            const response = await this.$auth.loginWith('local', { data: data})
+            console.log(response)
+            this.$auth.$storage.setUniversal('email', response.data.email)
+            await this.$auth.setUserToken(response.data.access_token, response.data.refresh_token)
+
+         } catch(e) {
+            console.log(e.message)
+         }
       }
    }
 };
